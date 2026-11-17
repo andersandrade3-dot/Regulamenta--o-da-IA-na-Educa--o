@@ -14,23 +14,35 @@ export const StepNavigation: React.FC = () => {
     Math.max(1, completed.size > 0 ? Math.max(...Array.from(completed)) + 1 : 1, session.attempt.current_stage)
   );
 
+  const currentStageMeta = STAGES_META.find((s) => s.id === activeStage);
+
   return (
-    <nav aria-label="Etapas da atividade" className="no-print mb-6">
-      <div className="rounded-2xl border border-[#D7DCE6] bg-white p-2.5 shadow-2xs">
-        <ol className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6">
+    <nav aria-label="Etapas da atividade" className="no-print mb-5 sm:mb-6">
+      <div className="rounded-2xl border border-[#D7DCE6] bg-white p-2.5 shadow-2xs space-y-2">
+        {/* Resumo compacto no celular para indicar etapa atual e incentivar navegação por deslize */}
+        <div className="flex items-center justify-between gap-2 px-1 sm:hidden">
+          <span className="text-xs font-extrabold uppercase tracking-wider text-[#183EFF]">
+            Etapa {activeStage} de 6
+          </span>
+          <span className="text-[11px] font-medium text-[#525866] truncate">
+            {currentStageMeta?.shortTitle} • deslize para navegar
+          </span>
+        </div>
+
+        <ol className="flex gap-2 overflow-x-auto pb-1 snap-x sm:grid sm:grid-cols-3 sm:overflow-visible sm:pb-0 lg:grid-cols-6">
           {STAGES_META.map((stage) => {
             const isActive = activeStage === stage.id;
             const isDone = completed.has(stage.id);
             const isAccessible = stage.id <= highestUnlocked || isDone || session.attempt.is_completed;
 
             return (
-              <li key={stage.id}>
+              <li key={stage.id} className="shrink-0 w-[196px] snap-start sm:w-auto sm:shrink">
                 <button
                   type="button"
                   disabled={!isAccessible}
                   onClick={() => goToStage(stage.id)}
                   aria-current={isActive ? 'step' : undefined}
-                  className={`flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left transition-all ${
+                  className={`flex min-h-[48px] w-full items-center gap-2.5 rounded-xl px-3 py-2 text-left transition-all ${
                     isActive
                       ? 'bg-[#183EFF] text-white shadow-sm cursor-pointer'
                       : isDone

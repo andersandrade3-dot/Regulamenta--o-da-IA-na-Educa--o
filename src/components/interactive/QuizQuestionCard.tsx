@@ -3,6 +3,7 @@ import { AlertCircle, CheckCircle2, HelpCircle, XCircle } from 'lucide-react';
 import { useMission } from '../../context/MissionContext';
 import type { ObjectiveQuestion } from '../../types/mission';
 import { CitationBadge } from './CitationBadge';
+import { SpeakButton } from './SpeakButton';
 
 interface QuizQuestionCardProps {
   question: ObjectiveQuestion;
@@ -78,7 +79,13 @@ export const QuizQuestionCard: React.FC<QuizQuestionCardProps> = ({
           </span>
         </div>
 
-        {isAnswered && (
+        <div className="flex flex-wrap items-center gap-2">
+          <SpeakButton
+            id={`q-${question.id}`}
+            label="Ouvir questão"
+            text={`${question.scenario}. ${question.prompt}`}
+          />
+          {isAnswered && (
           <span
             className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-bold ${
               isCorrect
@@ -98,7 +105,8 @@ export const QuizQuestionCard: React.FC<QuizQuestionCardProps> = ({
               </>
             )}
           </span>
-        )}
+          )}
+        </div>
       </div>
 
       {/* Situação prática */}
@@ -142,8 +150,9 @@ export const QuizQuestionCard: React.FC<QuizQuestionCardProps> = ({
               <button
                 key={opt.id}
                 type="button"
+                aria-pressed={isSelected}
                 onClick={() => void handleSelectSingle(opt.id)}
-                className={`flex items-start gap-3 rounded-xl border-[1.5px] p-3.5 text-left text-sm transition-all cursor-pointer ${cardStyle}`}
+                className={`flex min-h-[48px] items-start gap-3 rounded-xl border-[1.5px] p-3.5 text-left text-sm transition-all cursor-pointer ${cardStyle}`}
               >
                 <span
                   className={`font-badge mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-extrabold ${
@@ -201,7 +210,7 @@ export const QuizQuestionCard: React.FC<QuizQuestionCardProps> = ({
                       id={`match-${question.id}-${pair.id}`}
                       value={chosenId}
                       onChange={(e) => handleMatchingChange(pair.id, e.target.value)}
-                      className="w-full rounded-lg border border-[#CBD5E1] bg-white px-3 py-2 text-sm text-[#22252B] focus:border-[#183EFF] focus:outline-none focus:ring-2 focus:ring-[#183EFF]/20"
+                      className="min-h-[44px] w-full rounded-lg border border-[#CBD5E1] bg-white px-3 py-2 text-base sm:text-sm text-[#22252B] focus:border-[#183EFF] focus:outline-none focus:ring-2 focus:ring-[#183EFF]/20"
                     >
                       <option value="">Selecione o conceito correspondente...</option>
                       {question.matchingChoices?.map((choice) => (
@@ -230,7 +239,7 @@ export const QuizQuestionCard: React.FC<QuizQuestionCardProps> = ({
               type="button"
               disabled={!question.matchingPairs.every((p) => Boolean(matchingMap[p.id]))}
               onClick={() => void handleSubmitMatching()}
-              className="rounded-xl bg-[#183EFF] px-4 py-2 text-xs font-bold text-white hover:bg-[#1230CC] disabled:bg-[#E5E7EB] disabled:text-[#6B7280] transition-colors cursor-pointer disabled:cursor-not-allowed"
+              className="min-h-[44px] rounded-xl bg-[#183EFF] px-4 py-2 text-xs font-bold text-white hover:bg-[#1230CC] disabled:bg-[#E5E7EB] disabled:text-[#6B7280] transition-colors cursor-pointer disabled:cursor-not-allowed"
             >
               {isAnswered ? 'Reverificar associação' : 'Verificar associação'}
             </button>
@@ -247,6 +256,7 @@ export const QuizQuestionCard: React.FC<QuizQuestionCardProps> = ({
               : 'border-[#FCA5A5] bg-[#FFF5F5]'
           }`}
           role="status"
+          aria-live="polite"
         >
           <div className="flex items-start gap-2.5">
             {isCorrect ? (
@@ -254,10 +264,17 @@ export const QuizQuestionCard: React.FC<QuizQuestionCardProps> = ({
             ) : (
               <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-[#E11D1D]" aria-hidden="true" />
             )}
-            <div className="space-y-2 text-sm">
-              <p className="font-bold text-[#22252B]">
-                {isCorrect ? 'Análise correta!' : 'Atenção à fundamentação:'}
-              </p>
+            <div className="flex-1 space-y-2 text-sm">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <p className="font-bold text-[#22252B]">
+                  {isCorrect ? 'Análise correta!' : 'Atenção à fundamentação:'}
+                </p>
+                <SpeakButton
+                  id={`fb-${question.id}`}
+                  label="Ouvir feedback"
+                  text={question.explanationMec}
+                />
+              </div>
               <p className="font-body leading-relaxed text-[#2F3540]">{question.explanationMec}</p>
               {question.physicsBridgeNote && (
                 <p className="rounded-lg bg-white/80 px-3 py-2 text-xs text-[#3C3C3C] border border-[#E5E7EB]">

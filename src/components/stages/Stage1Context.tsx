@@ -20,6 +20,7 @@ import {
 } from '../../data/stage1Data';
 import { CitationBadge } from '../interactive/CitationBadge';
 import { QuizQuestionCard } from '../interactive/QuizQuestionCard';
+import { SpeakButton } from '../interactive/SpeakButton';
 import { StageSummaryBanner } from '../interactive/StageSummaryBanner';
 import { ChapterPillBadge, NumberedYellowDot } from '../layout/BauhausDecor';
 import { MecWindowCard } from '../layout/MecWindowCard';
@@ -81,8 +82,16 @@ export const Stage1Context: React.FC = () => {
   return (
     <div className="space-y-6 animate-mec-enter">
       {/* Cabeçalho da Etapa */}
-      <div className="rounded-2xl bg-[#183EFF] mec-blue-grid-bg p-6 text-white shadow-sm">
-        <ChapterPillBadge label="ETAPA" number={1} inverted />
+      <div className="rounded-2xl bg-[#183EFF] mec-blue-grid-bg p-5 sm:p-6 text-white shadow-sm">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <ChapterPillBadge label="ETAPA" number={1} inverted />
+          <SpeakButton
+            id="stage1-dilemma-audio"
+            label="Ouvir situação inicial"
+            inverted
+            text={`Etapa 1: A IA já faz parte da sua vida? Situação inicial: ${STAGE1_DILEMMA.promptText}`}
+          />
+        </div>
         <h2 className="mt-4 font-editorial text-2xl sm:text-3xl font-extrabold">
           A IA já faz parte da sua vida?
         </h2>
@@ -127,8 +136,9 @@ export const Stage1Context: React.FC = () => {
                   <button
                     key={clue.id}
                     type="button"
+                    aria-expanded={opened}
                     onClick={() => handleToggleClue(clue.id)}
-                    className={`rounded-xl border p-3 text-left transition-all cursor-pointer ${
+                    className={`min-h-[48px] rounded-xl border p-3.5 text-left transition-all cursor-pointer ${
                       opened
                         ? 'border-[#183EFF] bg-white shadow-xs'
                         : 'border-[#CBD5E1] bg-white/70 hover:border-[#183EFF]'
@@ -166,8 +176,9 @@ export const Stage1Context: React.FC = () => {
                   <button
                     key={choice.id}
                     type="button"
+                    aria-pressed={active}
                     onClick={() => handleSelectDilemma(choice.id)}
-                    className={`rounded-xl border-[1.5px] p-3.5 text-left text-sm transition-all cursor-pointer ${
+                    className={`min-h-[48px] rounded-xl border-[1.5px] p-3.5 text-left text-sm transition-all cursor-pointer ${
                       active
                         ? 'border-[#183EFF] bg-[#EEF2FF] text-[#183EFF] shadow-2xs'
                         : 'border-[#D7DCE6] bg-white hover:border-[#183EFF] text-[#22252B]'
@@ -418,11 +429,12 @@ export const Stage1Context: React.FC = () => {
                   >
                     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                       <p className="font-body text-sm text-[#22252B] sm:pr-4">{ex.text}</p>
-                      <div className="flex items-center gap-2 shrink-0">
+                      <div className="flex flex-wrap items-center gap-2 shrink-0">
                         <button
                           type="button"
+                          aria-pressed={chosen === 'sobre'}
                           onClick={() => handleSortSobreCom(ex.id, 'sobre')}
-                          className={`rounded-lg px-3 py-1.5 text-xs font-bold transition-colors cursor-pointer ${
+                          className={`min-h-[42px] rounded-lg px-3.5 py-2 text-xs font-bold transition-colors cursor-pointer ${
                             chosen === 'sobre'
                               ? 'bg-[#183EFF] text-white'
                               : 'border border-[#CBD5E1] bg-white text-[#22252B] hover:border-[#183EFF]'
@@ -432,8 +444,9 @@ export const Stage1Context: React.FC = () => {
                         </button>
                         <button
                           type="button"
+                          aria-pressed={chosen === 'com'}
                           onClick={() => handleSortSobreCom(ex.id, 'com')}
-                          className={`rounded-lg px-3 py-1.5 text-xs font-bold transition-colors cursor-pointer ${
+                          className={`min-h-[42px] rounded-lg px-3.5 py-2 text-xs font-bold transition-colors cursor-pointer ${
                             chosen === 'com'
                               ? 'bg-[#FFD000] text-[#183EFF]'
                               : 'border border-[#CBD5E1] bg-white text-[#22252B] hover:border-[#183EFF]'
@@ -466,7 +479,7 @@ export const Stage1Context: React.FC = () => {
                 type="button"
                 disabled={!allSortAnswered}
                 onClick={handleCheckSort}
-                className="rounded-xl bg-[#183EFF] px-4 py-2 text-xs font-bold text-white hover:bg-[#1230CC] disabled:bg-[#E5E7EB] disabled:text-[#6B7280] transition-colors cursor-pointer disabled:cursor-not-allowed"
+                className="min-h-[44px] w-full sm:w-auto rounded-xl bg-[#183EFF] px-4 py-2 text-xs font-bold text-white hover:bg-[#1230CC] disabled:bg-[#E5E7EB] disabled:text-[#6B7280] transition-colors cursor-pointer disabled:cursor-not-allowed"
               >
                 Conferir classificação
               </button>

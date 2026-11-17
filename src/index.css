@@ -40,7 +40,100 @@
   body {
     background-color: #ffffff;
     font-feature-settings: "lnum" 1;
+    overflow-x: clip;
   }
+
+  button,
+  a,
+  select,
+  input,
+  textarea {
+    touch-action: manipulation;
+  }
+
+  :focus-visible {
+    outline: 3px solid #ffd000;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 5px #183eff;
+  }
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  background: #ffd000;
+  color: #183eff;
+  font-weight: 800;
+  padding: 0.75rem 1rem;
+  border-radius: 0 0 0.75rem 0;
+}
+
+.skip-link:focus {
+  left: 0.5rem;
+  top: 0.5rem;
+}
+
+html[data-font-scale="large"] {
+  font-size: 112.5%;
+}
+
+html[data-font-scale="xlarge"] {
+  font-size: 122%;
+}
+
+html[data-high-contrast="true"] {
+  --mec-ink: #090d16;
+  --mec-ink-muted: #1e293b;
+  --mec-border: #334155;
+}
+
+html[data-high-contrast="true"] .mec-grid-bg {
+  background-image: none;
+  background-color: #ffffff;
+}
+
+html[data-high-contrast="true"] .text-\[\#525866\],
+html[data-high-contrast="true"] .text-\[\#475569\],
+html[data-high-contrast="true"] .text-\[\#3C3C3C\] {
+  color: #111827 !important;
+}
+
+html[data-high-contrast="true"] .border-\[\#D7DCE6\],
+html[data-high-contrast="true"] .border-\[\#CBD5E1\],
+html[data-high-contrast="true"] .border-\[\#E2E8F0\] {
+  border-color: #334155 !important;
+}
+
+html[data-relaxed-reading="true"] .font-body,
+html[data-relaxed-reading="true"] p,
+html[data-relaxed-reading="true"] li,
+html[data-relaxed-reading="true"] textarea {
+  line-height: 1.82 !important;
+  letter-spacing: 0.015em;
+  word-spacing: 0.05em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .animate-mec-enter {
+    animation: none !important;
+  }
+}
+
+html[data-reduce-motion="true"] {
+  scroll-behavior: auto;
+}
+
+html[data-reduce-motion="true"] *,
+html[data-reduce-motion="true"] *::before,
+html[data-reduce-motion="true"] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
 }
 
 .font-editorial {

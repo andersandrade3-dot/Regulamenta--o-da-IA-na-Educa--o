@@ -11,6 +11,7 @@ import {
   ShieldAlert,
 } from 'lucide-react';
 import { useMission } from '../../context/MissionContext';
+import { copyTextSafely } from '../../lib/assistive';
 import {
   INVESTIGATOR_ACTIONS,
   INVESTIGATOR_CASES,
@@ -19,6 +20,7 @@ import {
   STAGE2_QUESTION,
 } from '../../data/stage2Data';
 import { QuizQuestionCard } from '../interactive/QuizQuestionCard';
+import { SpeakButton } from '../interactive/SpeakButton';
 import { StageSummaryBanner } from '../interactive/StageSummaryBanner';
 import { ChapterPillBadge, NumberedYellowDot } from '../layout/BauhausDecor';
 import { MecWindowCard } from '../layout/MecWindowCard';
@@ -47,12 +49,10 @@ export const Stage2NotebookLM: React.FC = () => {
   };
 
   const handleCopyPrompt = async (id: string, text: string) => {
-    try {
-      await navigator.clipboard.writeText(text);
+    const ok = await copyTextSafely(text);
+    if (ok) {
       setCopiedPromptId(id);
       window.setTimeout(() => setCopiedPromptId(null), 2000);
-    } catch {
-      // ignore
     }
   };
 
@@ -84,8 +84,16 @@ export const Stage2NotebookLM: React.FC = () => {
   return (
     <div className="space-y-6 animate-mec-enter">
       {/* Cabeçalho da Etapa 2 */}
-      <div className="rounded-2xl bg-[#183EFF] mec-blue-grid-bg p-6 text-white shadow-sm">
-        <ChapterPillBadge label="ETAPA" number={2} inverted />
+      <div className="rounded-2xl bg-[#183EFF] mec-blue-grid-bg p-5 sm:p-6 text-white shadow-sm">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <ChapterPillBadge label="ETAPA" number={2} inverted />
+          <SpeakButton
+            id="stage2-intro-audio"
+            label="Ouvir apresentação"
+            inverted
+            text="Etapa 2: Laboratório de Investigação: descubra o NotebookLM. Aprenda a usar o NotebookLM como ferramenta de pesquisa fundamentada em fontes oficiais, trabalhando diretamente sobre o documento do MEC ia-basica.pdf para rastrear citações e evitar respostas sem lastro."
+          />
+        </div>
         <h2 className="mt-4 font-editorial text-2xl sm:text-3xl font-extrabold">
           Laboratório de Investigação: descubra o NotebookLM
         </h2>
@@ -96,23 +104,23 @@ export const Stage2NotebookLM: React.FC = () => {
           evitar respostas sem lastro.
         </p>
 
-        <div className="mt-4 flex flex-wrap gap-3">
+        <div className="mt-4 flex flex-col sm:flex-row sm:flex-wrap gap-3">
           <a
             href="/ia-basica.pdf"
             download="ia-basica.pdf"
-            className="inline-flex items-center gap-2 rounded-xl bg-[#FFD000] px-4 py-2 text-xs font-extrabold text-[#183EFF] hover:bg-[#F5C400] transition-colors"
+            className="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-xl bg-[#FFD000] px-4 py-2 text-xs font-extrabold text-[#183EFF] hover:bg-[#F5C400] transition-colors"
           >
-            <Download className="h-4 w-4" aria-hidden="true" />
+            <Download className="h-4 w-4 shrink-0" aria-hidden="true" />
             <span>Baixar documento oficial do MEC (ia-basica.pdf)</span>
           </a>
           <a
             href="https://notebooklm.google.com/"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-xl bg-white/15 px-4 py-2 text-xs font-bold text-white hover:bg-white/25 transition-colors"
+            className="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-xl bg-white/15 px-4 py-2 text-xs font-bold text-white hover:bg-white/25 transition-colors"
           >
             <span>Abrir NotebookLM oficial</span>
-            <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+            <ExternalLink className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
           </a>
         </div>
       </div>
@@ -128,8 +136,8 @@ export const Stage2NotebookLM: React.FC = () => {
         }
       >
         <div className="grid grid-cols-1 gap-5 lg:grid-cols-12">
-          {/* Lista de passos */}
-          <div className="lg:col-span-5 space-y-2">
+          {/* Lista de passos (faixa deslizável no celular, lista vertical no computador) */}
+          <div className="lg:col-span-5 flex gap-2 overflow-x-auto pb-1.5 snap-x lg:block lg:space-y-2 lg:overflow-visible lg:pb-0">
             {NOTEBOOKLM_STEPS.map((item) => {
               const isSelected = activeTutorialStep === item.step;
               const isExplored = completedSteps.includes(item.step);
@@ -137,8 +145,9 @@ export const Stage2NotebookLM: React.FC = () => {
                 <button
                   key={item.step}
                   type="button"
+                  aria-pressed={isSelected}
                   onClick={() => toggleTutorialStep(item.step)}
-                  className={`flex w-full items-center gap-3 rounded-xl border-[1.5px] px-3.5 py-2.5 text-left transition-all cursor-pointer ${
+                  className={`flex shrink-0 w-[235px] snap-start lg:w-full min-h-[48px] items-center gap-3 rounded-xl border-[1.5px] px-3.5 py-2.5 text-left transition-all cursor-pointer ${
                     isSelected
                       ? 'border-[#183EFF] bg-[#EEF2FF] text-[#183EFF]'
                       : isExplored
@@ -208,12 +217,12 @@ export const Stage2NotebookLM: React.FC = () => {
                 {currentStepData.tip}
               </div>
 
-              <div className="flex items-center justify-between pt-1">
+              <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
                 <button
                   type="button"
                   disabled={activeTutorialStep <= 1}
                   onClick={() => toggleTutorialStep(activeTutorialStep - 1)}
-                  className="rounded-lg border border-[#CBD5E1] bg-white px-3 py-1.5 text-xs font-bold text-[#3C3C3C] disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed"
+                  className="min-h-[44px] rounded-lg border border-[#CBD5E1] bg-white px-3.5 py-2 text-xs font-bold text-[#3C3C3C] disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed"
                 >
                   ← Passo anterior
                 </button>
@@ -221,7 +230,7 @@ export const Stage2NotebookLM: React.FC = () => {
                   type="button"
                   disabled={activeTutorialStep >= 7}
                   onClick={() => toggleTutorialStep(activeTutorialStep + 1)}
-                  className="rounded-lg bg-[#183EFF] px-3.5 py-1.5 text-xs font-bold text-white hover:bg-[#1230CC] disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed"
+                  className="min-h-[44px] rounded-lg bg-[#183EFF] px-4 py-2 text-xs font-bold text-white hover:bg-[#1230CC] disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed"
                 >
                   Próximo passo →
                 </button>
@@ -261,7 +270,7 @@ export const Stage2NotebookLM: React.FC = () => {
                       <button
                         type="button"
                         onClick={() => void handleCopyPrompt(p.id, p.text)}
-                        className="inline-flex items-center gap-1.5 rounded-lg border border-[#183EFF]/30 bg-white px-2.5 py-1 text-xs font-bold text-[#183EFF] hover:bg-[#183EFF] hover:text-white transition-colors cursor-pointer"
+                        className="inline-flex min-h-[40px] items-center gap-1.5 rounded-lg border border-[#183EFF]/30 bg-white px-3 py-1.5 text-xs font-bold text-[#183EFF] hover:bg-[#183EFF] hover:text-white transition-colors cursor-pointer"
                       >
                         {copied ? (
                           <>
@@ -377,8 +386,9 @@ export const Stage2NotebookLM: React.FC = () => {
                         <button
                           key={act.id}
                           type="button"
+                          aria-pressed={active}
                           onClick={() => handleInvestigatorPick(item.id, act.id)}
-                          className={`rounded-xl border-[1.5px] p-2.5 text-left transition-all cursor-pointer ${
+                          className={`min-h-[48px] rounded-xl border-[1.5px] p-3 text-left transition-all cursor-pointer ${
                             active
                               ? 'border-[#183EFF] bg-[#EEF2FF] text-[#183EFF]'
                               : 'border-[#CBD5E1] bg-white hover:border-[#183EFF] text-[#22252B]'
@@ -422,7 +432,7 @@ export const Stage2NotebookLM: React.FC = () => {
               type="button"
               disabled={!allCasesAnswered}
               onClick={handleCheckInvestigator}
-              className="rounded-xl bg-[#183EFF] px-4 py-2.5 text-xs font-bold text-white hover:bg-[#1230CC] disabled:bg-[#E5E7EB] disabled:text-[#6B7280] transition-colors cursor-pointer disabled:cursor-not-allowed"
+              className="min-h-[44px] w-full sm:w-auto rounded-xl bg-[#183EFF] px-4 py-2.5 text-xs font-bold text-white hover:bg-[#1230CC] disabled:bg-[#E5E7EB] disabled:text-[#6B7280] transition-colors cursor-pointer disabled:cursor-not-allowed"
             >
               {investigatorChecked ? 'Revalidar Desafio do Investigador' : 'Validar investigação'}
             </button>

@@ -14,6 +14,7 @@ import {
 } from '../../data/stage3Data';
 import type { DecisionVerdict, TrafficColor } from '../../types/mission';
 import { QuizQuestionCard } from '../interactive/QuizQuestionCard';
+import { SpeakButton } from '../interactive/SpeakButton';
 import { StageSummaryBanner } from '../interactive/StageSummaryBanner';
 import { ChapterPillBadge, NumberedYellowDot } from '../layout/BauhausDecor';
 import { MecWindowCard } from '../layout/MecWindowCard';
@@ -142,8 +143,16 @@ export const Stage3EthicsCenter: React.FC = () => {
   return (
     <div className="space-y-6 animate-mec-enter">
       {/* Cabeçalho da Etapa 3 */}
-      <div className="rounded-2xl bg-[#183EFF] mec-blue-grid-bg p-6 text-white shadow-sm">
-        <ChapterPillBadge label="ETAPA" number={3} inverted />
+      <div className="rounded-2xl bg-[#183EFF] mec-blue-grid-bg p-5 sm:p-6 text-white shadow-sm">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <ChapterPillBadge label="ETAPA" number={3} inverted />
+          <SpeakButton
+            id="stage3-intro-audio"
+            label="Ouvir apresentação"
+            inverted
+            text="Etapa 3: Central de Decisões: ética ou irresponsabilidade? Analise situações reais do cotidiano escolar e classifique decisões à luz dos 10 Princípios Fundamentais do MEC, da LGPD e do ECA Digital."
+          />
+        </div>
         <h2 className="mt-4 font-editorial text-2xl sm:text-3xl font-extrabold">
           Central de Decisões: ética ou irresponsabilidade?
         </h2>
@@ -190,8 +199,9 @@ export const Stage3EthicsCenter: React.FC = () => {
                       <button
                         key={opt.id}
                         type="button"
+                        aria-pressed={active}
                         onClick={() => handleDecision(item.id, opt.id)}
-                        className={`rounded-xl border-[1.5px] px-3 py-2 text-xs font-extrabold transition-all cursor-pointer ${
+                        className={`min-h-[44px] rounded-xl border-[1.5px] px-3 py-2 text-xs font-extrabold transition-all cursor-pointer ${
                           active
                             ? opt.activeClass
                             : 'border-[#CBD5E1] bg-white text-[#3C3C3C] hover:border-[#183EFF]'
@@ -246,56 +256,83 @@ export const Stage3EthicsCenter: React.FC = () => {
         <div className="space-y-5">
           <p className="font-body text-sm text-[#3C3C3C]">
             Classifique os 6 cartões de prática digital abaixo nas categorias do Semáforo:{' '}
-            <strong>arraste</strong> um cartão até a zona desejada ou{' '}
-            <strong>toque para selecioná-lo</strong> e depois clique no sinal correspondente.
+            <strong>no celular ou teclado</strong>, toque diretamente em{' '}
+            <strong>Verde, Amarelo ou Vermelho</strong> dentro de cada cartão — ou{' '}
+            <strong>arraste / selecione o cartão</strong> para colocá-lo em uma das zonas abaixo.
           </p>
 
           {/* Bandeja de cartões pendentes */}
-          <div className="rounded-2xl border border-dashed border-[#94A3B8] bg-[#F8FAFC] p-4">
-            <div className="mb-2.5 flex items-center justify-between gap-2">
+          <div className="rounded-2xl border border-dashed border-[#94A3B8] bg-[#F8FAFC] p-3.5 sm:p-4">
+            <div className="mb-2.5 flex flex-wrap items-center justify-between gap-2">
               <span className="text-xs font-extrabold uppercase tracking-wider text-[#525866]">
                 Cartões para classificar ({unassignedCards.length} restantes)
               </span>
               {selectedCardId && (
                 <span className="rounded-full bg-[#183EFF] px-2.5 py-0.5 text-[11px] font-bold text-white">
-                  Cartão selecionado — clique em Verde, Amarelo ou Vermelho abaixo
+                  Cartão selecionado — toque em Verde, Amarelo ou Vermelho abaixo
                 </span>
               )}
             </div>
 
             {unassignedCards.length > 0 ? (
-              <div className="grid grid-cols-1 gap-2.5 md:grid-cols-2">
+              <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
                 {unassignedCards.map((card) => {
                   const isSelected = selectedCardId === card.id;
                   return (
-                    <div
+                    <article
                       key={card.id}
                       draggable
                       onDragStart={() => setDraggingCardId(card.id)}
                       onDragEnd={() => setDraggingCardId(null)}
-                      onClick={() =>
-                        setSelectedCardId((prev) => (prev === card.id ? null : card.id))
-                      }
-                      role="button"
-                      tabIndex={0}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                          e.preventDefault();
-                          setSelectedCardId((prev) => (prev === card.id ? null : card.id));
-                        }
-                      }}
-                      className={`flex items-start gap-2.5 rounded-xl border-[1.5px] p-3 text-left text-xs sm:text-sm transition-all cursor-grab active:cursor-grabbing ${
+                      className={`rounded-xl border-[1.5px] p-3 transition-all space-y-2.5 ${
                         isSelected
                           ? 'border-[#183EFF] bg-[#EEF2FF] ring-2 ring-[#183EFF]/25'
                           : 'border-[#CBD5E1] bg-white hover:border-[#183EFF]'
                       }`}
                     >
-                      <GripVertical
-                        className="h-4 w-4 shrink-0 text-[#94A3B8] mt-0.5"
-                        aria-hidden="true"
-                      />
-                      <span className="font-body text-[#22252B] leading-snug">{card.text}</span>
-                    </div>
+                      <button
+                        type="button"
+                        aria-pressed={isSelected}
+                        onClick={() =>
+                          setSelectedCardId((prev) => (prev === card.id ? null : card.id))
+                        }
+                        className="flex w-full items-start gap-2.5 text-left text-xs sm:text-sm cursor-pointer min-h-[40px]"
+                      >
+                        <GripVertical
+                          className="h-4 w-4 shrink-0 text-[#94A3B8] mt-0.5"
+                          aria-hidden="true"
+                        />
+                        <span className="font-body text-[#22252B] leading-snug">{card.text}</span>
+                      </button>
+
+                      {/* Botões de classificação direta em 1 toque (ideal para celular e acessibilidade) */}
+                      <div className="grid grid-cols-3 gap-1.5 border-t border-[#EDF1F7] pt-2">
+                        <button
+                          type="button"
+                          onClick={() => assignCardToZone(card.id, 'green')}
+                          aria-label={`Classificar no sinal Verde: ${card.text}`}
+                          className="min-h-[40px] rounded-lg border border-[#86EFAC] bg-[#F0FDF4] px-2 py-1.5 text-[11px] font-extrabold text-[#064E23] hover:bg-[#DCFCE7] transition-colors cursor-pointer"
+                        >
+                          Verde
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => assignCardToZone(card.id, 'yellow')}
+                          aria-label={`Classificar no sinal Amarelo: ${card.text}`}
+                          className="min-h-[40px] rounded-lg border border-[#F3DF7C] bg-[#FFFDF0] px-2 py-1.5 text-[11px] font-extrabold text-[#7A5900] hover:bg-[#FEF3C7] transition-colors cursor-pointer"
+                        >
+                          Amarelo
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => assignCardToZone(card.id, 'red')}
+                          aria-label={`Classificar no sinal Vermelho: ${card.text}`}
+                          className="min-h-[40px] rounded-lg border border-[#FCA5A5] bg-[#FEF2F2] px-2 py-1.5 text-[11px] font-extrabold text-[#7F1D1D] hover:bg-[#FEE2E2] transition-colors cursor-pointer"
+                        >
+                          Vermelho
+                        </button>
+                      </div>
+                    </article>
                   );
                 })}
               </div>
@@ -354,7 +391,8 @@ export const Stage3EthicsCenter: React.FC = () => {
                               <button
                                 type="button"
                                 onClick={() => unassignCard(card.id)}
-                                className="shrink-0 text-[11px] font-bold text-[#64748B] hover:text-[#E11D1D] cursor-pointer"
+                                aria-label={`Remover cartão: ${card.text}`}
+                                className="shrink-0 min-h-[36px] rounded-lg bg-[#F1F5F9] px-2.5 py-1 text-[11px] font-bold text-[#475569] hover:bg-[#FEE2E2] hover:text-[#B91C1C] cursor-pointer"
                                 title="Mover de volta para a bandeja"
                               >
                                 Remover
@@ -406,7 +444,7 @@ export const Stage3EthicsCenter: React.FC = () => {
               type="button"
               disabled={!allTrafficAssigned}
               onClick={handleCheckTraffic}
-              className="rounded-xl bg-[#183EFF] px-5 py-2.5 text-xs font-bold text-white hover:bg-[#1230CC] disabled:bg-[#E5E7EB] disabled:text-[#6B7280] transition-colors cursor-pointer disabled:cursor-not-allowed"
+              className="min-h-[46px] w-full sm:w-auto rounded-xl bg-[#183EFF] px-5 py-2.5 text-xs font-bold text-white hover:bg-[#1230CC] disabled:bg-[#E5E7EB] disabled:text-[#6B7280] transition-colors cursor-pointer disabled:cursor-not-allowed"
             >
               {trafficChecked ? 'Reverificar Semáforo' : 'Verificar Semáforo'}
             </button>

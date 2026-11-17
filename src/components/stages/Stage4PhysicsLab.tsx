@@ -10,6 +10,7 @@ import {
   SlidersHorizontal,
 } from 'lucide-react';
 import { useMission } from '../../context/MissionContext';
+import { copyTextSafely } from '../../lib/assistive';
 import {
   buildStructuredPhysicsPrompt,
   DEFAULT_PROMPT_CONFIG,
@@ -20,6 +21,7 @@ import {
 } from '../../data/stage4Data';
 import type { PromptLabConfig } from '../../types/mission';
 import { QuizQuestionCard } from '../interactive/QuizQuestionCard';
+import { SpeakButton } from '../interactive/SpeakButton';
 import { StageSummaryBanner } from '../interactive/StageSummaryBanner';
 import { ChapterPillBadge, NumberedYellowDot } from '../layout/BauhausDecor';
 import { MecWindowCard } from '../layout/MecWindowCard';
@@ -60,13 +62,11 @@ export const Stage4PhysicsLab: React.FC = () => {
   };
 
   const handleCopyPrompt = async () => {
-    try {
-      await navigator.clipboard.writeText(generatedPrompt);
+    const ok = await copyTextSafely(generatedPrompt);
+    if (ok) {
       setCopiedPrompt(true);
       updateInteractions((prev) => ({ ...prev, stage4CopiedPrompt: true }));
       window.setTimeout(() => setCopiedPrompt(false), 2000);
-    } catch {
-      // ignore
     }
   };
 
@@ -95,8 +95,16 @@ export const Stage4PhysicsLab: React.FC = () => {
   return (
     <div className="space-y-6 animate-mec-enter">
       {/* Cabeçalho da Etapa 4 */}
-      <div className="rounded-2xl bg-[#183EFF] mec-blue-grid-bg p-6 text-white shadow-sm">
-        <ChapterPillBadge label="ETAPA" number={4} inverted />
+      <div className="rounded-2xl bg-[#183EFF] mec-blue-grid-bg p-5 sm:p-6 text-white shadow-sm">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <ChapterPillBadge label="ETAPA" number={4} inverted />
+          <SpeakButton
+            id="stage4-intro-audio"
+            label="Ouvir situação de Física"
+            inverted
+            text={`Etapa 4: Física mais Inteligência Artificial. Situação: ${STAGE4_SCENARIO.promptText}`}
+          />
+        </div>
         <h2 className="mt-4 font-editorial text-2xl sm:text-3xl font-extrabold">
           Física + Inteligência Artificial: coloque em prática
         </h2>
@@ -130,8 +138,9 @@ export const Stage4PhysicsLab: React.FC = () => {
                     <button
                       key={pos.id}
                       type="button"
+                      aria-pressed={active}
                       onClick={() => setSelectedPossibility(pos.id)}
-                      className={`flex items-center gap-2.5 rounded-xl border-[1.5px] px-3.5 py-2.5 text-left transition-all cursor-pointer ${
+                      className={`flex min-h-[46px] items-center gap-2.5 rounded-xl border-[1.5px] px-3.5 py-2.5 text-left transition-all cursor-pointer ${
                         active
                           ? 'border-[#183EFF] bg-[#EEF2FF] text-[#183EFF]'
                           : 'border-[#D7DCE6] bg-white hover:border-[#183EFF] text-[#22252B]'
@@ -207,7 +216,7 @@ export const Stage4PhysicsLab: React.FC = () => {
                 id="lab-goal"
                 value={config.goal}
                 onChange={(e) => updateConfig({ goal: e.target.value })}
-                className="w-full rounded-xl border border-[#CBD5E1] bg-[#FAFBFD] px-3 py-2.5 text-sm text-[#22252B] focus:border-[#183EFF] focus:bg-white focus:outline-none"
+                className="min-h-[46px] w-full rounded-xl border border-[#CBD5E1] bg-[#FAFBFD] px-3 py-2.5 text-base sm:text-sm text-[#22252B] focus:border-[#183EFF] focus:bg-white focus:outline-none"
               >
                 {PROMPT_LAB_OPTIONS.goals.map((g) => (
                   <option key={g.id} value={g.id}>
@@ -228,7 +237,7 @@ export const Stage4PhysicsLab: React.FC = () => {
                 id="lab-topic"
                 value={config.physicsTopic}
                 onChange={(e) => updateConfig({ physicsTopic: e.target.value })}
-                className="w-full rounded-xl border border-[#CBD5E1] bg-[#FAFBFD] px-3 py-2.5 text-sm text-[#22252B] focus:border-[#183EFF] focus:bg-white focus:outline-none"
+                className="min-h-[46px] w-full rounded-xl border border-[#CBD5E1] bg-[#FAFBFD] px-3 py-2.5 text-base sm:text-sm text-[#22252B] focus:border-[#183EFF] focus:bg-white focus:outline-none"
               >
                 {PROMPT_LAB_OPTIONS.physicsTopics.map((t) => (
                   <option key={t.id} value={t.id}>
@@ -249,7 +258,7 @@ export const Stage4PhysicsLab: React.FC = () => {
                 id="lab-difficulty"
                 value={config.difficulty}
                 onChange={(e) => updateConfig({ difficulty: e.target.value })}
-                className="w-full rounded-xl border border-[#CBD5E1] bg-[#FAFBFD] px-3 py-2.5 text-sm text-[#22252B] focus:border-[#183EFF] focus:bg-white focus:outline-none"
+                className="min-h-[46px] w-full rounded-xl border border-[#CBD5E1] bg-[#FAFBFD] px-3 py-2.5 text-base sm:text-sm text-[#22252B] focus:border-[#183EFF] focus:bg-white focus:outline-none"
               >
                 {PROMPT_LAB_OPTIONS.difficulties.map((d) => (
                   <option key={d.id} value={d.id}>
@@ -270,7 +279,7 @@ export const Stage4PhysicsLab: React.FC = () => {
                 id="lab-format"
                 value={config.format}
                 onChange={(e) => updateConfig({ format: e.target.value })}
-                className="w-full rounded-xl border border-[#CBD5E1] bg-[#FAFBFD] px-3 py-2.5 text-sm text-[#22252B] focus:border-[#183EFF] focus:bg-white focus:outline-none"
+                className="min-h-[46px] w-full rounded-xl border border-[#CBD5E1] bg-[#FAFBFD] px-3 py-2.5 text-base sm:text-sm text-[#22252B] focus:border-[#183EFF] focus:bg-white focus:outline-none"
               >
                 {PROMPT_LAB_OPTIONS.formats.map((f) => (
                   <option key={f.id} value={f.id}>
@@ -320,7 +329,7 @@ export const Stage4PhysicsLab: React.FC = () => {
               <button
                 type="button"
                 onClick={() => void handleCopyPrompt()}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-[#FFD000] px-3 py-1.5 text-xs font-extrabold text-[#183EFF] hover:bg-[#F5C400] transition-colors cursor-pointer"
+                className="inline-flex min-h-[44px] w-full sm:w-auto items-center justify-center gap-1.5 rounded-lg bg-[#FFD000] px-3.5 py-2 text-xs font-extrabold text-[#183EFF] hover:bg-[#F5C400] transition-colors cursor-pointer"
               >
                 {copiedPrompt ? (
                   <>
@@ -335,7 +344,7 @@ export const Stage4PhysicsLab: React.FC = () => {
                 )}
               </button>
             </div>
-            <pre className="whitespace-pre-wrap font-code text-xs sm:text-[13px] leading-relaxed text-[#E2E8F0]">
+            <pre className="whitespace-pre-wrap break-words font-code text-xs sm:text-[13px] leading-relaxed text-[#E2E8F0]">
               {generatedPrompt}
             </pre>
           </div>
@@ -389,8 +398,9 @@ export const Stage4PhysicsLab: React.FC = () => {
                   <button
                     key={seg.id}
                     type="button"
+                    aria-pressed={isFound}
                     onClick={() => handleSelectAuditSegment(seg.issueId)}
-                    className={`block w-full rounded-xl border p-3 text-left font-body text-sm leading-relaxed transition-all ${
+                    className={`block min-h-[46px] w-full rounded-xl border p-3.5 text-left font-body text-sm leading-relaxed transition-all ${
                       isFound
                         ? 'border-[#E11D1D] bg-[#FEF2F2] text-[#7F1D1D]'
                         : isIssue

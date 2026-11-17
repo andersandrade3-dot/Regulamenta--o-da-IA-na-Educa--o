@@ -15,6 +15,7 @@ import { useMission } from '../../context/MissionContext';
 import { ALL_OBJECTIVE_QUESTIONS } from '../../data/allQuestions';
 import { STAGES_META } from '../../data/mecReferences';
 import { ESSAY_PROMPTS } from '../../data/stage6Data';
+import { SpeakButton } from '../interactive/SpeakButton';
 import { BauhausBowls, BauhausTriangles } from '../layout/BauhausDecor';
 import { MecWindowCard } from '../layout/MecWindowCard';
 
@@ -75,10 +76,16 @@ export const CompletionScreen: React.FC = () => {
         </blockquote>
 
         <div className="no-print mt-6 flex flex-wrap gap-3">
+          <SpeakButton
+            id="completion-closing-quote"
+            label="Ouvir mensagem final"
+            inverted
+            text="Utilizar inteligência artificial não significa deixar de pensar. Significa aprender a fazer melhores perguntas, investigar respostas, verificar informações e assumir a responsabilidade pelo conhecimento que produzimos."
+          />
           <button
             type="button"
             onClick={() => window.print()}
-            className="inline-flex items-center gap-2 rounded-xl bg-[#FFD000] px-4 py-2.5 text-xs font-extrabold text-[#183EFF] hover:bg-[#F5C400] transition-colors cursor-pointer"
+            className="inline-flex min-h-[44px] items-center gap-2 rounded-xl bg-[#FFD000] px-4 py-2.5 text-xs font-extrabold text-[#183EFF] hover:bg-[#F5C400] transition-colors cursor-pointer"
           >
             <Printer className="h-4 w-4" aria-hidden="true" />
             <span>Imprimir / Salvar em PDF</span>
@@ -86,7 +93,7 @@ export const CompletionScreen: React.FC = () => {
           <button
             type="button"
             onClick={() => setReferenceDrawerOpen(true)}
-            className="inline-flex items-center gap-2 rounded-xl bg-white/15 px-4 py-2.5 text-xs font-bold text-white hover:bg-white/25 transition-colors cursor-pointer"
+            className="inline-flex min-h-[44px] items-center gap-2 rounded-xl bg-white/15 px-4 py-2.5 text-xs font-bold text-white hover:bg-white/25 transition-colors cursor-pointer"
           >
             <BookOpen className="h-4 w-4" aria-hidden="true" />
             <span>Biblioteca de Referências</span>
@@ -94,7 +101,7 @@ export const CompletionScreen: React.FC = () => {
           <button
             type="button"
             onClick={() => goToStage(6)}
-            className="inline-flex items-center gap-2 rounded-xl bg-white/15 px-4 py-2.5 text-xs font-bold text-white hover:bg-white/25 transition-colors cursor-pointer"
+            className="inline-flex min-h-[44px] items-center gap-2 rounded-xl bg-white/15 px-4 py-2.5 text-xs font-bold text-white hover:bg-white/25 transition-colors cursor-pointer"
           >
             <Edit3 className="h-4 w-4" aria-hidden="true" />
             <span>Revisar / editar respostas discursivas</span>

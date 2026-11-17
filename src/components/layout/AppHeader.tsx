@@ -12,6 +12,8 @@ import {
   UserCheck,
 } from 'lucide-react';
 import { useMission } from '../../context/MissionContext';
+import { copyTextSafely } from '../../lib/assistive';
+import { AccessibilityMenu } from './AccessibilityMenu';
 
 export const AppHeader: React.FC = () => {
   const {
@@ -33,26 +35,27 @@ export const AppHeader: React.FC = () => {
 
   const handleCopyCode = async () => {
     if (!session) return;
-    try {
-      await navigator.clipboard.writeText(session.attempt.resume_code);
+    const copied = await copyTextSafely(session.attempt.resume_code);
+    if (copied) {
       setCopiedCode(true);
       window.setTimeout(() => setCopiedCode(false), 2000);
-    } catch {
-      // Fallback silencioso
     }
   };
 
   return (
-    <header className="no-print sticky top-0 z-30 border-b border-[#D7DCE6] bg-white/95 backdrop-blur-md">
+    <header className="no-print relative md:sticky md:top-0 z-30 border-b border-[#D7DCE6] bg-white/95 backdrop-blur-md">
       {/* Faixa superior institucional azul MEC */}
       <div className="bg-[#183EFF] text-white">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-2 px-4 py-2 text-xs">
-          <div className="flex items-center gap-2.5">
-            <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-[#FFD000] font-badge text-[10px] font-extrabold text-[#183EFF]">
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-2 px-3 sm:px-4 py-2 text-xs">
+          <div className="flex items-center gap-2 min-w-0">
+            <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#FFD000] font-badge text-[10px] font-extrabold text-[#183EFF]">
               IA
             </span>
-            <span className="font-semibold tracking-wide">
-              IFCE • Informática Aplicada ao Ensino de Física
+            <span className="font-semibold tracking-wide truncate">
+              <span className="sm:hidden">IFCE • Ensino de Física</span>
+              <span className="hidden sm:inline">
+                IFCE • Informática Aplicada ao Ensino de Física
+              </span>
             </span>
             <span className="hidden md:inline text-white/75">|</span>
             <span className="hidden md:inline text-white/90">
@@ -60,14 +63,16 @@ export const AppHeader: React.FC = () => {
             </span>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+            <AccessibilityMenu />
             <button
               type="button"
               onClick={() => setReferenceDrawerOpen(true)}
-              className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-xs font-bold text-white hover:bg-white/25 transition-colors cursor-pointer"
+              className="inline-flex min-h-[36px] items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-xs font-bold text-white hover:bg-white/25 transition-colors cursor-pointer"
             >
               <BookOpen className="h-3.5 w-3.5 text-[#FFD000]" aria-hidden="true" />
-              <span>Biblioteca de Referências</span>
+              <span className="sm:hidden">Referências</span>
+              <span className="hidden sm:inline">Biblioteca de Referências</span>
             </button>
           </div>
         </div>

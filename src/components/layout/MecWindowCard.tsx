@@ -23,8 +23,8 @@ export const MecWindowCard: React.FC<MecWindowCardProps> = ({
       <section
         className={`rounded-2xl border-[1.5px] border-[#183EFF] bg-[#183EFF] p-3 sm:p-5 shadow-sm ${className}`}
       >
-        <div className="mb-4 flex items-center justify-between gap-3 rounded-full bg-white px-4 py-2.5 shadow-sm">
-          <h3 className="font-editorial text-sm sm:text-base font-bold text-[#22252B] truncate">
+        <div className="mb-4 flex items-center justify-between gap-3 rounded-2xl sm:rounded-full bg-white px-4 py-2.5 shadow-sm">
+          <h3 className="font-editorial text-sm sm:text-base font-bold text-[#22252B] leading-snug break-words">
             {title}
           </h3>
           <div className="flex items-center gap-2 shrink-0">
@@ -64,7 +64,9 @@ export const MecWindowCard: React.FC<MecWindowCardProps> = ({
               <span className="h-2.5 w-2.5 rounded-full bg-[#FF0000]" />
             </div>
           )}
-          <h3 className="font-editorial text-sm sm:text-base font-bold truncate">{title}</h3>
+          <h3 className="font-editorial text-sm sm:text-base font-bold leading-snug break-words">
+            {title}
+          </h3>
         </div>
         <div className="flex items-center gap-2 shrink-0">
           {headerRight}

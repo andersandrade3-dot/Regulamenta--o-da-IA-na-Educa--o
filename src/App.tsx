@@ -1,4 +1,5 @@
 import React from 'react';
+import { AccessibilityProvider } from './context/AccessibilityContext';
 import { MissionProvider, useMission } from './context/MissionContext';
 import { AppHeader } from './components/layout/AppHeader';
 import { ReferenceDrawer } from './components/layout/ReferenceDrawer';
@@ -35,10 +36,13 @@ const MissionShell: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col mec-grid-bg">
+    <div className="min-h-screen flex flex-col mec-grid-bg overflow-x-clip">
+      <a href="#main-content" className="skip-link">
+        Pular para o conteúdo principal
+      </a>
       <AppHeader />
 
-      <main className="flex-1 pb-14">
+      <main id="main-content" tabIndex={-1} className="flex-1 pb-14 focus:outline-none">
         {!session || viewMode === 'identification' ? (
           <IdentificationScreen />
         ) : viewMode === 'completion' ? (
@@ -74,9 +78,11 @@ const MissionShell: React.FC = () => {
 
 export function App() {
   return (
-    <MissionProvider>
-      <MissionShell />
-    </MissionProvider>
+    <AccessibilityProvider>
+      <MissionProvider>
+        <MissionShell />
+      </MissionProvider>
+    </AccessibilityProvider>
   );
 }
 

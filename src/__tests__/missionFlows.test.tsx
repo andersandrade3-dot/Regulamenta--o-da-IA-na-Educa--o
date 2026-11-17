@@ -5,6 +5,7 @@ import App from '../App';
 import { ALL_OBJECTIVE_QUESTIONS, MISSION_COMPETENCY_TOPICS } from '../data/allQuestions';
 import { buildStructuredPhysicsPrompt, DEFAULT_PROMPT_CONFIG } from '../data/stage4Data';
 import { ESSAY_PROMPTS } from '../data/stage6Data';
+import { DEFAULT_ASSISTIVE_PREFS } from '../lib/assistive';
 import * as supabaseClientModule from '../lib/supabaseClient';
 import type { MissionSessionPayload, StageId } from '../types/mission';
 
@@ -507,5 +508,96 @@ describe('IA, Educação e Responsabilidade — Fluxos Pedagógicos e Persistên
         })
       );
     });
+  });
+
+  it('oferece recursos assistivos (fonte, alto contraste, leitura espaçada, voz) e classificação em 1 toque no celular', async () => {
+    const speakMock = vi.fn();
+    const cancelMock = vi.fn();
+    class FakeUtterance {
+      text: string;
+      lang = '';
+      rate = 1;
+      onend: (() => void) | null = null;
+      onerror: (() => void) | null = null;
+      constructor(text: string) {
+        this.text = text;
+      }
+    }
+
+    Object.defineProperty(window, 'speechSynthesis', {
+      value: { speak: speakMock, cancel: cancelMock },
+      configurable: true,
+    });
+    Object.defineProperty(window, 'SpeechSynthesisUtterance', {
+      value: FakeUtterance,
+      configurable: true,
+    });
+
+    // Simula sessão diretamente na Etapa 3 para validar Semáforo em 1 toque no celular
+    const seededSession: MissionSessionPayload = {
+      attempt: {
+        id: 'mobile-seed-1',
+        resume_code: 'IFCE-MOB1-99',
+        session_secret: 'sec-mob',
+        student_name: 'Estudante Mobile',
+        class_group: 'IFCE Física 2026.2',
+        current_stage: 3,
+        completed_stages: [1, 2],
+        achievements: ['investigador_fonte'],
+        interactions_state: {},
+        is_completed: false,
+        completed_at: null,
+        created_at: '2026-11-17T10:00:00.000Z',
+        updated_at: '2026-11-17T10:00:00.000Z',
+      },
+      quiz_responses: [],
+      essays: [],
+    };
+    localStorage.setItem('missao_ia_active_session_v1', JSON.stringify(seededSession));
+    localStorage.setItem('ia_edu_assistive_prefs_v1', JSON.stringify(DEFAULT_ASSISTIVE_PREFS));
+
+    render(<App />);
+
+    // 1. Abrir menu de Acessibilidade e aplicar configurações assistivas
+    fireEvent.click(screen.getByRole('button', { name: /Acessibilidade/i }));
+    expect(await screen.findByRole('dialog')).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: /Grande/i }));
+    fireEvent.click(screen.getByRole('button', { name: /Alto contraste/i }));
+    fireEvent.click(screen.getByRole('button', { name: /Leitura confortável/i }));
+
+    expect(document.documentElement.dataset.fontScale).toBe('large');
+    expect(document.documentElement.dataset.highContrast).toBe('true');
+    expect(document.documentElement.dataset.relaxedReading).toBe('true');
+
+    fireEvent.click(screen.getByRole('button', { name: /Concluir ajustes/i }));
+
+    // 2. Retomar sessão móvel na Etapa 3 e testar áudio + classificação em 1 toque no Semáforo
+    fireEvent.click(screen.getByRole('button', { name: /Continuar de onde parei/i }));
+    expect(
+      await screen.findByRole('heading', {
+        name: /Central de Decisões: ética ou irresponsabilidade\?/i,
+      })
+    ).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: /Ouvir apresentação em voz alta/i }));
+    expect(speakMock).toHaveBeenCalledTimes(1);
+
+    const directGreenBtn = screen.getByRole('button', {
+      name: /Classificar no sinal Verde: Criar um roteiro de revisão sobre Leis de Newton/i,
+    });
+    fireEvent.click(directGreenBtn);
+
+    expect(
+      screen.getByRole('button', {
+        name: /Remover cartão: Criar um roteiro de revisão sobre Leis de Newton/i,
+      })
+    ).toBeInTheDocument();
+
+    // Restaurar padrão para não vazar estado visual
+    fireEvent.click(screen.getByRole('button', { name: /Acessibilidade/i }));
+    fireEvent.click(screen.getByRole('button', { name: /Restaurar padrão/i }));
+    expect(document.documentElement.dataset.fontScale).toBe('normal');
+    expect(document.documentElement.dataset.highContrast).toBe('false');
   });
 });

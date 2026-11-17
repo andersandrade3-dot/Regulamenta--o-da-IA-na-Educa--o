@@ -9,6 +9,7 @@ import {
   Sparkles,
 } from 'lucide-react';
 import { useMission } from '../../context/MissionContext';
+import { SpeakButton } from '../interactive/SpeakButton';
 import { BauhausBowls, BauhausTriangles } from '../layout/BauhausDecor';
 import { MecWindowCard } from '../layout/MecWindowCard';
 
@@ -94,20 +95,36 @@ export const IdentificationScreen: React.FC = () => {
               </span>
             </div>
 
-            <div className="flex items-center gap-3 mb-4">
-              <BauhausTriangles color="yellow" />
-              <span className="rounded-full bg-[#EEF2FF] px-3 py-1 text-xs font-extrabold uppercase tracking-wider text-[#183EFF]">
-                Atividade Pedagógica Interativa
-              </span>
+            <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
+              <div className="flex items-center gap-3">
+                <BauhausTriangles color="yellow" />
+                <span className="rounded-full bg-[#EEF2FF] px-3 py-1 text-xs font-extrabold uppercase tracking-wider text-[#183EFF]">
+                  Atividade Pedagógica Interativa
+                </span>
+              </div>
+              <SpeakButton
+                id="intro-welcome"
+                label="Ouvir apresentação"
+                text="Inteligência Artificial, Educação e Responsabilidade. Você utiliza inteligência artificial. Mas sabe utilizá-la com responsabilidade? Nesta investigação guiada para Informática Aplicada ao Ensino de Física, você analisará dilemas reais, aprenderá a investigar fontes com o NotebookLM, avaliará situações éticas e legais e construirá prompts críticos para ensinar Física."
+              />
             </div>
 
-            <h1 className="font-editorial text-3xl sm:text-4xl font-extrabold tracking-tight text-[#183EFF] leading-tight">
+            <h1 className="font-editorial text-2xl sm:text-4xl font-extrabold tracking-tight text-[#183EFF] leading-tight">
               <span className="mec-yellow-underline">IA, Educação e Responsabilidade</span>
             </h1>
 
-            <p className="mt-4 font-editorial text-lg sm:text-xl font-bold text-[#22252B] leading-snug">
+            <p className="mt-4 font-editorial text-base sm:text-xl font-bold text-[#22252B] leading-snug">
               Você utiliza inteligência artificial. Mas sabe utilizá-la com responsabilidade?
             </p>
+
+            {/* Atalho rápido no celular para ir direto ao formulário sem rolar tudo */}
+            <a
+              href="#identificacao-form"
+              className="mt-4 inline-flex min-h-[46px] w-full items-center justify-center gap-2 rounded-xl bg-[#183EFF] px-4 py-2.5 text-sm font-bold text-white hover:bg-[#1230CC] transition-colors lg:hidden"
+            >
+              <span>Preencher identificação e começar</span>
+              <ArrowRight className="h-4 w-4 rotate-90" aria-hidden="true" />
+            </a>
 
             <p className="mt-4 font-body text-sm sm:text-base leading-relaxed text-[#3C3C3C]">
               Nesta investigação guiada para a disciplina{' '}
@@ -152,7 +169,7 @@ export const IdentificationScreen: React.FC = () => {
         </div>
 
         {/* Coluna de Identificação do Estudante (somente Nome completo e Turma) */}
-        <div className="lg:col-span-6 space-y-5">
+        <div id="identificacao-form" className="lg:col-span-6 space-y-5 scroll-mt-4">
           {savedPreview && (
             <MecWindowCard
               title="Progresso salvo encontrado neste navegador"
@@ -232,7 +249,7 @@ export const IdentificationScreen: React.FC = () => {
                   value={studentName}
                   onChange={(e) => setStudentName(e.target.value)}
                   placeholder="Ex.: Maria Clara Oliveira Santos"
-                  className="w-full rounded-xl border-[1.5px] border-[#CBD5E1] bg-[#FAFBFD] px-3.5 py-2.5 text-sm text-[#22252B] placeholder:text-[#94A3B8] focus:border-[#183EFF] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#183EFF]/20"
+                  className="min-h-[46px] w-full rounded-xl border-[1.5px] border-[#CBD5E1] bg-[#FAFBFD] px-3.5 py-2.5 text-base sm:text-sm text-[#22252B] placeholder:text-[#94A3B8] focus:border-[#183EFF] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#183EFF]/20"
                 />
               </div>
 
@@ -251,7 +268,7 @@ export const IdentificationScreen: React.FC = () => {
                   value={classGroup}
                   onChange={(e) => setClassGroup(e.target.value)}
                   placeholder="Ex.: Lic. em Física — 2026.2"
-                  className="w-full rounded-xl border-[1.5px] border-[#CBD5E1] bg-[#FAFBFD] px-3.5 py-2.5 text-sm text-[#22252B] placeholder:text-[#94A3B8] focus:border-[#183EFF] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#183EFF]/20"
+                  className="min-h-[46px] w-full rounded-xl border-[1.5px] border-[#CBD5E1] bg-[#FAFBFD] px-3.5 py-2.5 text-base sm:text-sm text-[#22252B] placeholder:text-[#94A3B8] focus:border-[#183EFF] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#183EFF]/20"
                 />
               </div>
 
@@ -278,7 +295,7 @@ export const IdentificationScreen: React.FC = () => {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#183EFF] px-5 py-3 text-sm font-bold text-white hover:bg-[#1230CC] disabled:opacity-70 transition-colors cursor-pointer"
+                className="inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-xl bg-[#183EFF] px-5 py-3 text-sm font-bold text-white hover:bg-[#1230CC] disabled:opacity-70 transition-colors cursor-pointer"
               >
                 <Sparkles className="h-4 w-4 text-[#FFD000]" aria-hidden="true" />
                 <span>{isSubmitting ? 'Iniciando atividade...' : 'Iniciar atividade'}</span>
@@ -313,12 +330,12 @@ export const IdentificationScreen: React.FC = () => {
                       value={recoverCode}
                       onChange={(e) => setRecoverCode(e.target.value.toUpperCase())}
                       placeholder="IFCE-7K4P-9X"
-                      className="font-code flex-1 rounded-xl border-[1.5px] border-[#CBD5E1] bg-[#FAFBFD] px-3 py-2 text-sm uppercase text-[#22252B] focus:border-[#183EFF] focus:bg-white focus:outline-none"
+                      className="font-code min-h-[46px] flex-1 rounded-xl border-[1.5px] border-[#CBD5E1] bg-[#FAFBFD] px-3 py-2 text-base sm:text-sm uppercase text-[#22252B] focus:border-[#183EFF] focus:bg-white focus:outline-none"
                     />
                     <button
                       type="submit"
                       disabled={isRecovering}
-                      className="rounded-xl bg-[#FFD000] px-4 py-2 text-xs font-extrabold text-[#183EFF] hover:bg-[#F5C400] transition-colors cursor-pointer shrink-0"
+                      className="min-h-[46px] rounded-xl bg-[#FFD000] px-4 py-2 text-xs font-extrabold text-[#183EFF] hover:bg-[#F5C400] transition-colors cursor-pointer shrink-0"
                     >
                       {isRecovering ? 'Buscando...' : 'Recuperar progresso'}
                     </button>
