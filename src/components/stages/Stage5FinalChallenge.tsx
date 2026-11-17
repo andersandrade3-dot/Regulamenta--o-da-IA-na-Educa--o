@@ -63,15 +63,14 @@ export const Stage5FinalChallenge: React.FC = () => {
         accent="blue"
         headerRight={<Compass className="h-4 w-4 text-[#183EFF]" aria-hidden="true" />}
       >
-        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-5">
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
           {topicStatusList.map((t) => (
             <div
               key={t.id}
-              className={`rounded-xl border p-2.5 text-xs ${
-                t.allDone
-                  ? 'border-[#86EFAC] bg-[#F0FDF4] text-[#064E23]'
-                  : 'border-[#E2E8F0] bg-[#FAFBFD] text-[#475569]'
-              }`}
+              className={`rounded-xl border p-2.5 text-xs ${t.allDone
+                ? 'border-[#86EFAC] bg-[#F0FDF4] text-[#064E23]'
+                : 'border-[#E2E8F0] bg-[#FAFBFD] text-[#475569]'
+                }`}
             >
               <div className="flex items-center justify-between gap-1">
                 <span className="text-[10px] font-extrabold uppercase tracking-wider opacity-75">
@@ -106,14 +105,14 @@ export const Stage5FinalChallenge: React.FC = () => {
                   key={q.id}
                   type="button"
                   onClick={() => setStepIndex(idx)}
+                  aria-current={active ? 'step' : undefined}
                   aria-label={`Ir para cenário ${idx + 1}`}
-                  className={`font-badge h-8 w-8 rounded-full text-xs font-extrabold transition-all cursor-pointer ${
-                    active
-                      ? 'bg-[#183EFF] text-white ring-2 ring-[#FFD000]'
-                      : answered
-                        ? 'bg-[#00A63E] text-white'
-                        : 'bg-[#EEF2FF] text-[#183EFF] hover:bg-[#D7E0FF]'
-                  }`}
+                  className={`font-badge h-10 w-10 rounded-full text-xs font-extrabold transition-all cursor-pointer ${active
+                    ? 'bg-[#183EFF] text-white ring-2 ring-[#FFD000]'
+                    : answered
+                      ? 'bg-[#00A63E] text-white'
+                      : 'bg-[#EEF2FF] text-[#183EFF] hover:bg-[#D7E0FF]'
+                    }`}
                 >
                   {idx + 1}
                 </button>
@@ -130,12 +129,12 @@ export const Stage5FinalChallenge: React.FC = () => {
         />
 
         {/* Botões Anterior / Próximo cenário */}
-        <div className="flex items-center justify-between pt-2">
+        <div className="flex flex-wrap items-center justify-between gap-2 pt-2">
           <button
             type="button"
             disabled={currentIdx === 0}
             onClick={() => setStepIndex(currentIdx - 1)}
-            className="inline-flex items-center gap-1.5 rounded-xl border border-[#CBD5E1] bg-white px-4 py-2 text-xs font-bold text-[#3C3C3C] hover:bg-[#F8FAFC] disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed"
+            className="inline-flex min-h-[44px] items-center gap-1.5 rounded-xl border border-[#CBD5E1] bg-white px-4 py-2 text-xs font-bold text-[#3C3C3C] hover:bg-[#F8FAFC] disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed"
           >
             <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
             <span>Cenário anterior</span>
@@ -145,7 +144,7 @@ export const Stage5FinalChallenge: React.FC = () => {
             type="button"
             disabled={currentIdx >= STAGE5_QUESTIONS.length - 1}
             onClick={() => setStepIndex(currentIdx + 1)}
-            className="inline-flex items-center gap-1.5 rounded-xl bg-[#FFD000] px-4 py-2 text-xs font-extrabold text-[#183EFF] hover:bg-[#F5C400] disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed"
+            className="inline-flex min-h-[44px] items-center gap-1.5 rounded-xl bg-[#FFD000] px-4 py-2 text-xs font-extrabold text-[#183EFF] hover:bg-[#F5C400] disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed"
           >
             <span>Próximo cenário</span>
             <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />

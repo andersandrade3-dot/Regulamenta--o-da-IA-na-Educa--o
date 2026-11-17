@@ -11,6 +11,7 @@ import {
 import { useMission } from '../../context/MissionContext';
 import { ESSAY_PROMPTS } from '../../data/stage6Data';
 import { countWords } from '../../lib/persistence';
+import { SpeakButton } from '../interactive/SpeakButton';
 import { StageSummaryBanner } from '../interactive/StageSummaryBanner';
 import { ChapterPillBadge } from '../layout/BauhausDecor';
 import { MecWindowCard } from '../layout/MecWindowCard';
@@ -40,10 +41,10 @@ export const Stage6Essays: React.FC = () => {
 
   const formattedLastSave = lastSavedAt
     ? new Date(lastSavedAt).toLocaleTimeString('pt-BR', {
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-      })
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+    })
     : null;
 
   return (
@@ -112,9 +113,16 @@ export const Stage6Essays: React.FC = () => {
             >
               <div className="space-y-4">
                 <div className="rounded-xl border-l-4 border-[#183EFF] bg-[#F7F9FE] p-4 space-y-2">
-                  <p className="text-xs font-extrabold uppercase tracking-wider text-[#183EFF]">
-                    {spec.title}
-                  </p>
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <p className="text-xs font-extrabold uppercase tracking-wider text-[#183EFF]">
+                      {spec.title}
+                    </p>
+                    <SpeakButton
+                      id={`essay-prompt-${spec.questionNumber}`}
+                      label="Ouvir questão"
+                      text={`${spec.badge}. ${spec.title}. ${spec.promptText}`}
+                    />
+                  </div>
                   <p className="font-editorial text-sm sm:text-base font-bold text-[#22252B] leading-relaxed">
                     “{spec.promptText}”
                   </p>
@@ -199,8 +207,8 @@ export const Stage6Essays: React.FC = () => {
                     onBlur={(e) =>
                       saveEssayDraft(spec.questionNumber, spec.badge, e.target.value, true)
                     }
-                    placeholder="Escreva aqui sua reflexão crítica com suas próprias palavras. Não há resposta única decorada — o professor avaliará sua argumentação..."
-                    className="w-full rounded-xl border-[1.5px] border-[#CBD5E1] bg-white p-4 font-body text-sm sm:text-base leading-relaxed text-[#22252B] placeholder:text-[#94A3B8] focus:border-[#183EFF] focus:outline-none focus:ring-2 focus:ring-[#183EFF]/20"
+                    placeholder="Escreva aqui sua reflexão crítica com suas próprias palavras (no celular, você pode usar o microfone/ditado do teclado para rascunhar)..."
+                    className="min-h-[180px] w-full rounded-xl border-[1.5px] border-[#CBD5E1] bg-white p-4 font-body text-base leading-relaxed text-[#22252B] placeholder:text-[#94A3B8] focus:border-[#183EFF] focus:outline-none focus:ring-2 focus:ring-[#183EFF]/20"
                   />
 
                   <div className="mt-2 flex flex-wrap items-center justify-between gap-2">
@@ -219,7 +227,7 @@ export const Stage6Essays: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => saveEssayDraft(spec.questionNumber, spec.badge, text, true)}
-                      className="inline-flex items-center gap-1.5 rounded-lg border border-[#183EFF]/30 bg-[#EEF2FF] px-3 py-1.5 text-xs font-bold text-[#183EFF] hover:bg-[#183EFF] hover:text-white transition-colors cursor-pointer"
+                      className="inline-flex min-h-[44px] w-full sm:w-auto items-center justify-center gap-1.5 rounded-lg border border-[#183EFF]/30 bg-[#EEF2FF] px-3.5 py-2 text-xs font-bold text-[#183EFF] hover:bg-[#183EFF] hover:text-white transition-colors cursor-pointer"
                     >
                       <Save className="h-3.5 w-3.5" aria-hidden="true" />
                       <span>Salvar agora</span>

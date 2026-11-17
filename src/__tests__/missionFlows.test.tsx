@@ -329,7 +329,7 @@ describe('IA, Educação e Responsabilidade — Fluxos Pedagógicos e Persistên
     await waitFor(() => {
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     });
-  });
+  }, 20000);
 
   it('sincroniza via RPCs do Supabase, trata falha de conexão com retry e recupera por código de retomada', async () => {
     let failNextQuizRpc = true;

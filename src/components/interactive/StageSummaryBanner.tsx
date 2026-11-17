@@ -69,11 +69,10 @@ export const StageSummaryBanner: React.FC<StageSummaryBannerProps> = ({
             type="button"
             disabled={!canComplete}
             onClick={onCompleteAndContinue}
-            className={`inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-bold transition-all ${
-              canComplete
-                ? 'bg-[#183EFF] text-white hover:bg-[#1230CC] shadow-sm cursor-pointer'
-                : 'bg-[#E5E7EB] text-[#6B7280] cursor-not-allowed'
-            }`}
+            className={`inline-flex min-h-[48px] w-full sm:w-auto items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-bold transition-all ${canComplete
+              ? 'bg-[#183EFF] text-white hover:bg-[#1230CC] shadow-sm cursor-pointer'
+              : 'bg-[#E5E7EB] text-[#6B7280] cursor-not-allowed'
+              }`}
           >
             <span>{continueLabel ?? defaultButtonLabel}</span>
             <ArrowRight className="h-4 w-4" aria-hidden="true" />

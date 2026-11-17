@@ -152,7 +152,7 @@ export const ReferenceDrawer: React.FC = () => {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Buscar por LGPD, ECA Digital, UNESCO, página..."
-                className="w-full rounded-xl border border-[#CBD5E1] bg-[#FAFBFD] py-2 pl-9 pr-3 text-sm text-[#22252B] focus:border-[#183EFF] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#183EFF]/20"
+                className="min-h-[44px] w-full rounded-xl border border-[#CBD5E1] bg-[#FAFBFD] py-2 pl-9 pr-3 text-base sm:text-sm text-[#22252B] focus:border-[#183EFF] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#183EFF]/20"
               />
             </div>
 
@@ -163,11 +163,11 @@ export const ReferenceDrawer: React.FC = () => {
                     key={f.id}
                     type="button"
                     onClick={() => setCategory(f.id)}
-                    className={`rounded-full px-3 py-1 text-xs font-bold transition-colors cursor-pointer ${
-                      category === f.id
-                        ? 'bg-[#183EFF] text-white'
-                        : 'bg-[#F1F5F9] text-[#475569] hover:bg-[#E2E8F0]'
-                    }`}
+                    aria-pressed={category === f.id}
+                    className={`min-h-[38px] rounded-full px-3.5 py-1.5 text-xs font-bold transition-colors cursor-pointer ${category === f.id
+                      ? 'bg-[#183EFF] text-white'
+                      : 'bg-[#F1F5F9] text-[#475569] hover:bg-[#E2E8F0]'
+                      }`}
                   >
                     {f.label}
                   </button>
