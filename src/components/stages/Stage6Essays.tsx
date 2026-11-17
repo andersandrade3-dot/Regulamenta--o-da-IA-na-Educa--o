@@ -255,4 +255,6 @@ export const Stage6Essays: React.FC = () => {
         continueLabel="Registrar respostas e concluir atividade"
       />
     </div>
- 
+  );
+};
+

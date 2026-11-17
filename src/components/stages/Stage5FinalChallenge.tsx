@@ -163,4 +163,9 @@ export const Stage5FinalChallenge: React.FC = () => {
         isStageCompleted={isStageCompleted}
         canComplete={allStage5Answered}
         incompleteHint={`Responda a todos os ${STAGE5_QUESTIONS.length} cenários decisórios desta etapa para avançar às questões discursivas.`}
-        onCompleteAndContinue={() => void completeStage(5, tr
+        onCompleteAndContinue={() => void completeStage(5, true)}
+      />
+    </div>
+  );
+};
+

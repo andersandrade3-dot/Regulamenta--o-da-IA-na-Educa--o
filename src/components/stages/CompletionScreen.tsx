@@ -311,4 +311,9 @@ export const CompletionScreen: React.FC = () => {
         >
           <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
           <span>Voltar à tela inicial de identificação</span>
-        </but
+        </button>
+      </div>
+    </div>
+  );
+};
+

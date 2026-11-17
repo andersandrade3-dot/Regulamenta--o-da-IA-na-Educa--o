@@ -85,4 +85,7 @@ export const StageSummaryBanner: React.FC<StageSummaryBannerProps> = ({
           )}
         </div>
       </div>
-    </d
+    </div>
+  );
+};
+
